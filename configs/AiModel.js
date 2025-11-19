@@ -110,69 +110,69 @@
 // npm install @google/genai mime
 // npm install -D @types/node
 
-import {
-  GoogleGenAI,
-} from '@google/genai';
+// import {
+//   GoogleGenAI,
+// } from '@google/genai';
 
-async function main() {
-  const ai = new GoogleGenAI({
-    apiKey: process.env.GEMINI_API_KEY,
-  });
-  const config = {
-    thinkingConfig: {
-      thinkingBudget: -1,
-    },
-  };
-  const model = 'gemini-1.5-flash';
-  const contents = [
-    {
-      role: 'user',
-      parts: [
-        {
-          text: `Generate a study material for Python for exam and level of difficulty will be easy with summary of course, list of chapter along with the summary, Topic list in each chapter, All result  in JSON format`,
-        },
-      ],
-    },
-  ];
+// async function main() {
+//   const ai = new GoogleGenAI({
+//     apiKey: process.env.GEMINI_API_KEY,
+//   });
+//   const config = {
+//     thinkingConfig: {
+//       thinkingBudget: -1,
+//     },
+//   };
+//   const model = 'gemini-1.5-flash';
+//   const contents = [
+//     {
+//       role: 'user',
+//       parts: [
+//         {
+//           text: `Generate a study material for Python for exam and level of difficulty will be easy with summary of course, list of chapter along with the summary, Topic list in each chapter, All result  in JSON format`,
+//         },
+//       ],
+//     },
+//   ];
 
- const generateNotesai = [
-    {
-      role: 'user',
-      parts: [
-        {
-          text: `Generate exam material detail content for each chapter, Make sure to include all topic points in the content, make sure to give content in HTML format (Do not Add HTMLKL ,Head, Body, title, tag) , The chapters:
-{
-"chapterTitle": "Introduction to Java",
-"chapterSummary": "This chapter introduces the Java programming language, its features, and the development environment setup. It also covers basic program structure and compilation.",
-"topics": [
-"What is Java?",
-"Features of Java (Platform Independence, Object-Oriented, etc.)",
-"Setting up a Java Development Environment (JDK, IDE)",
-"Basic program structure (main method, comments)",
-"Compilation and execution of Java programs",
-"Common errors and debugging"
-]
-},`,
-        },
-      ],
-    },
-  ];
+//  const generateNotesai = [
+//     {
+//       role: 'user',
+//       parts: [
+//         {
+//           text: `Generate exam material detail content for each chapter, Make sure to include all topic points in the content, make sure to give content in HTML format (Do not Add HTMLKL ,Head, Body, title, tag) , The chapters:
+// {
+// "chapterTitle": "Introduction to Java",
+// "chapterSummary": "This chapter introduces the Java programming language, its features, and the development environment setup. It also covers basic program structure and compilation.",
+// "topics": [
+// "What is Java?",
+// "Features of Java (Platform Independence, Object-Oriented, etc.)",
+// "Setting up a Java Development Environment (JDK, IDE)",
+// "Basic program structure (main method, comments)",
+// "Compilation and execution of Java programs",
+// "Common errors and debugging"
+// ]
+// },`,
+//         },
+//       ],
+//     },
+//   ];
 
 
 
-  const response = await ai.models.generateContentStream({
-    model,
-    config,
-    contents,
-    generateNotesai
-  });
-  let fileIndex = 0;
-  for await (const chunk of response) {
-    console.log(chunk.text);
-  }
-}
+//   const response = await ai.models.generateContentStream({
+//     model,
+//     config,
+//     contents,
+//     generateNotesai
+//   });
+//   let fileIndex = 0;
+//   for await (const chunk of response) {
+//     console.log(chunk.text);
+//   }
+// }
 
-main();
+// main();
 
 
 
