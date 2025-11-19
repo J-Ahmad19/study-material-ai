@@ -1,6 +1,6 @@
 import { serve } from "inngest/next";
 import { inngest } from "../../../inngest/client";
-import { CreateNewUser, GenerateNotes, helloWorld } from "../../../inngest/function";
+import { CreateNewUser,  helloWorld } from "../../../inngest/function";
 
 
 //Create an API that serves zero functions
