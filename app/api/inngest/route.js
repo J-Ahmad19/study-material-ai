@@ -1,12 +1,17 @@
 import { serve } from "inngest/next";
-import { inngest } from "@/inngest/client";
-import {
-  helloWorld,
-  CreateNewUser,
+import { inngest } from "../../../inngest/client";
+import { CreateNewUser, helloWorld } from "../../../inngest/function";
 
-} from "@/inngest/function";
 
-export const { GET, POST } = serve({
+//Create an API that serves zero functions
+export const { GET, POST, PUT } = serve({
   client: inngest,
-  functions: [helloWorld, CreateNewUser],
+  functions: [
+    /* your functions will be passed here later! */
+helloWorld,
+CreateNewUser,
+///GenerateNotes
+
+  ],
 });
+
