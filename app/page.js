@@ -2,10 +2,22 @@
 
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, useUser } from "@clerk/nextjs";
 import { ArrowRight } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Home() {
+  const router = useRouter();
+  const { isSignedIn } = useUser();
+
+  // 👉 If user is already logged in → redirect to /create
+  useEffect(() => {
+    if (isSignedIn) {
+      router.push("/create");
+    }
+  }, [isSignedIn, router]);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-white via-gray-50 to-blue-50 flex flex-col items-center justify-center p-6">
       
@@ -25,21 +37,14 @@ export default function Home() {
           all in one organized place. Learn smart, prepare faster.
         </p>
 
-        <Button className="text-lg px-6 py-5 rounded-xl flex items-center gap-2">
+        <Button
+          className="text-lg px-6 py-5 rounded-xl flex items-center gap-2"
+          onClick={() => router.push("/sign-in")}
+        >
           Get Started <ArrowRight className="w-4 h-4" />
         </Button>
       </div>
 
-      {/* Illustration */}
-      <div className="mt-10">
-        <Image
-          src="/hero-study.png"
-          alt="Study Illustration"
-          width={420}
-          height={320}
-          className="drop-shadow-lg"
-        />
-      </div>
     </div>
   );
 }
