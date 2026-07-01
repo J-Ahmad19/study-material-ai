@@ -48,7 +48,7 @@ const Create = () => {
       setGeneratedCourse(result.data);
     } catch (err) {
       console.error("Error generating course:", err);
-      alert("Failed to generate course. Please try again.");
+     // alert("Failed to generate course. Please try again.");
     } finally {
       setLoading(false);
       router.replace('/dashboard');
