@@ -17,7 +17,7 @@ const CourseList = () => {
 
   const GetCourseList = async () => {
     setLoading(true)
-    const result = await axios.post('/api/courses', {
+    const result = await axios.post('api/courses', {
       createdBy: user?.primaryEmailAddress?.emailAddress,
     });
 
