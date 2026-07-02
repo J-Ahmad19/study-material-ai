@@ -13,7 +13,7 @@ const CourseCardItem = ({course}) => {
 <div>
     <div className='flex justify-between items-center'>
         <img src={'knowledge.png'} alt='other' width={50} height={50}/>
-        <h2 className='test-[10px] p-1 rounded-full'> 29 Aug 2025</h2>
+      {/* //  <h2 className='test-[10px] p-1 rounded-full'> 29 Aug 2025</h2> */}
     </div>
     <h2 className='mt-3 font-medium text-lg'>{course?.courseLayout?.courseTitle}</h2>
     <p className='text-xs line-clamp-2 text-gray-500' >{course?.courseLayout?.courseSummary}</p>
