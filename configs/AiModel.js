@@ -110,6 +110,7 @@
 // npm install @google/genai mime
 // npm install -D @types/node
 
+<<<<<<< HEAD
 // import {
 //   GoogleGenAI,
 // } from '@google/genai';
@@ -174,5 +175,7 @@
 
 // main();
 
+=======
+>>>>>>> 19b3641f1013d81f3b8680d4387243a5125fbf2d
 
 

@@ -54,6 +54,7 @@ export const CreateNewUser = inngest.createFunction(
 
 
   
+<<<<<<< HEAD
 
 
 // import { CHAPTER_NOTES_TABLE, STUDY_MATERIAL } from "@/configs/schema";
@@ -200,3 +201,5 @@ export const CreateNewUser = inngest.createFunction(
 //     });
 //   }
 // );
+=======
+>>>>>>> 19b3641f1013d81f3b8680d4387243a5125fbf2d
