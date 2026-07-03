@@ -3,9 +3,11 @@ import DashboardHeader from '../dashboard/_components/DashboardHeader'
 
 const CourseViewLayout = ({children}) => {
   return (
-    <div>
-    <DashboardHeader/>
-        <div className="mx-10 md:mx-36 lg:px-50 mt-5">{children}</div>
+    <div className='min-h-screen bg-background'>
+      <DashboardHeader/>
+      <div className="relative z-10 mx-6 md:mx-12 lg:mx-20 py-8">
+        {children}
+      </div>
     </div>
   )
 }
