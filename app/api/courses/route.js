@@ -32,6 +32,8 @@ import { STUDY_MATERIAL } from "../../../configs/schema";
 import { desc, eq } from "drizzle-orm";
 
 // 📌 POST: Get all courses by createdBy
+export const dynamic = 'force-dynamic';
+
 export async function POST(req) {
   try {
     const body = await req.json();

@@ -3,6 +3,9 @@ import { db } from "../../../configs/db";
 import { STUDY_TYPE_CONTENT } from "../../../configs/schema";
 import { and, eq } from "drizzle-orm";
 
+// Disable static optimization for this route
+export const dynamic = 'force-dynamic';
+
 export async function GET(req) {
   try {
     const { searchParams } = new URL(req.url);

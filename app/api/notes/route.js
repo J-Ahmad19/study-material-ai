@@ -4,6 +4,8 @@ import { CHAPTER_NOTES_TABLE } from "../../../configs/schema";
 import { eq } from "drizzle-orm";
 
 // GET /api/notes/[courseId]
+export const dynamic = 'force-dynamic';
+
 export async function GET(req, { params }) {
   try {
     const { courseId } = params;

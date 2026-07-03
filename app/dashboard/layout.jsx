@@ -2,6 +2,8 @@ import React from 'react'
 import Sidebar from './_components/Sidebar'
 import DashboardHeader from './_components/DashboardHeader'
 
+export const dynamic = 'force-dynamic';
+
 const Dashboardlayout = ({children}) => {
   return (
     <div className='min-h-screen bg-gradient-to-br from-background via-background to-secondary/5'>

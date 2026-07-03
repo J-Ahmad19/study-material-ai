@@ -11,6 +11,8 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner"
 import gsap from "gsap"
 
+export const dynamic = 'force-dynamic';
+
 const Create = () => {
   const [step, setStep] = useState(0);
   const [formData, setFormData] = useState({});

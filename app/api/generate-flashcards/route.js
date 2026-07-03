@@ -201,6 +201,8 @@ import { db } from "../../../configs/db";
 import { CHAPTER_NOTES_TABLE, STUDY_TYPE_CONTENT } from "../../../configs/schema";
 import { eq } from "drizzle-orm";
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(req) {
   try {
     const { courseId } = await req.json();
