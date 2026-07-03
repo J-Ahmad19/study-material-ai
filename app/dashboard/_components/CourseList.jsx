@@ -1,15 +1,18 @@
 "use client"
 import { useUser } from '@clerk/nextjs'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import axios from "axios";
 import CourseCardItem from './CourseCardItem';
-import { RefreshCcw } from 'lucide-react';
+import { RefreshCcw, BookMarked } from 'lucide-react';
 import {Button } from "@/components/ui/button"
+import gsap from 'gsap'
 
 const CourseList = () => {
   const { user } = useUser();
   const [courseList, setCourseList] = useState([]);
   const [loading, setLoading]= useState(false)
+  const titleRef = useRef(null)
+  const gridRef = useRef(null)
 
   useEffect(() => {
     if (user) GetCourseList();
@@ -26,37 +29,93 @@ const CourseList = () => {
     setLoading(false)
     console.log("📘 Courses:", courses);
 
-    // 👇 Fetch notes for each course
+    // Fetch notes for each course
     for (const course of courses) {
       try {
         const notesRes = await axios.post('/api/chapternotes', {
-          courseId: course.id, // or course.courseId depending on your schema
+          courseId: course.id,
         });
-
-        // console.log(`📝 Notes for course "${course.topic}":`, notesRes.data.notes);
       } catch (err) {
         console.error("❌ Error fetching notes:", err);
       }
     }
   };
 
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        titleRef.current,
+        { opacity: 0, x: -20 },
+        { opacity: 1, x: 0, duration: 0.6, ease: "power3.out" }
+      )
+
+      if (!loading && courseList.length > 0) {
+        gsap.fromTo(
+          ".course-card",
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, duration: 0.5, stagger: 0.1, ease: "power3.out" }
+        )
+      }
+    }, gridRef)
+
+    return () => ctx.revert()
+  }, [loading, courseList])
+
   return (
-    <div className='mt-10'>
-      <h2 className='font-bold text-2xl flex justify-between items-center'> Your Study Material
+    <div className='space-y-6'>
+      {/* Header */}
+      <div 
+        ref={titleRef}
+        className='flex justify-between items-center'
+      >
+        <div>
+          <h2 className='font-bold text-3xl text-foreground flex items-center gap-3'>
+            <BookMarked className='w-8 h-8 text-primary' />
+            Your Study Materials
+          </h2>
+          <p className='text-sm text-muted-foreground mt-1'>
+            {courseList.length} course{courseList.length !== 1 ? 's' : ''} in your library
+          </p>
+        </div>
 
-<Button variant="outline" 
-onClick={GetCourseList}><RefreshCcw/> Refresh</Button>
+        <Button 
+          variant="outline" 
+          onClick={GetCourseList}
+          className='rounded-xl border-primary/30 hover:bg-primary/10 transition-all duration-300'
+        >
+          <RefreshCcw className='w-4 h-4 mr-2' /> 
+          Refresh
+        </Button>
+      </div>
 
-      </h2>
-      
-      <div className='grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 mt-2 gap-5'>
-        {loading==false? courseList?.map((course, index) => {
-          return <CourseCardItem course={course} key={index} />;
-        }):
-        [1,2,3,4,5,6].map((item,index)=>(
-          <div key={index} className='h-56 w-full bg-slate-200 rounded-lg animate-pulse'>
+      {/* Grid */}
+      <div 
+        ref={gridRef}
+        className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
+      >
+        {!loading ? (
+          courseList?.length > 0 ? (
+            courseList.map((course, index) => (
+              <div key={index} className='course-card'>
+                <CourseCardItem course={course} />
+              </div>
+            ))
+          ) : (
+            <div className='col-span-full flex flex-col items-center justify-center py-12'>
+              <BookMarked className='w-12 h-12 text-muted-foreground mb-3' />
+              <p className='text-muted-foreground text-center'>
+                No courses yet. Create one to get started!
+              </p>
             </div>
-        ))}
+          )
+        ) : (
+          [1,2,3,4,5,6].map((item,index)=>(
+            <div 
+              key={index} 
+              className='h-64 rounded-2xl bg-gradient-to-br from-muted to-muted/50 animate-pulse'
+            ></div>
+          ))
+        )}
       </div>
     </div>
   );
