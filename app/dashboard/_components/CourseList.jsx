@@ -10,7 +10,8 @@ import gsap from 'gsap'
 const CourseList = () => {
   const { user } = useUser();
   const [courseList, setCourseList] = useState([]);
-  const [loading, setLoading]= useState(false)
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const titleRef = useRef(null)
   const gridRef = useRef(null)
 
@@ -19,25 +20,36 @@ const CourseList = () => {
   }, [user]);
 
   const GetCourseList = async () => {
-    setLoading(true)
-    const result = await axios.post('api/courses', {
-      createdBy: user?.primaryEmailAddress?.emailAddress,
-    });
+    try {
+      setLoading(true);
+      setError(null);
+      const result = await axios.post('api/courses', {
+        createdBy: user?.primaryEmailAddress?.emailAddress,
+      });
 
-    const courses = result.data.result;
-    setCourseList(courses);
-    setLoading(false)
-    console.log("📘 Courses:", courses);
+      const courses = result.data.result;
+      setCourseList(courses);
+      console.log("📘 Courses:", courses);
 
-    // Fetch notes for each course
-    for (const course of courses) {
-      try {
-        const notesRes = await axios.post('/api/chapternotes', {
-          courseId: course.id,
-        });
-      } catch (err) {
-        console.error("❌ Error fetching notes:", err);
+      // Fetch notes for each course
+      for (const course of courses) {
+        try {
+          const notesRes = await axios.post('/api/chapternotes', {
+            courseId: course.id,
+          });
+        } catch (err) {
+          console.error("❌ Error fetching notes:", err);
+        }
       }
+    } catch (err) {
+      console.error("Error fetching courses:", err);
+      setError({
+        message: err.response?.data?.error || "Failed to load courses",
+        details: err.response?.data?.details || err.message,
+      });
+      setCourseList([]);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -88,6 +100,27 @@ const CourseList = () => {
         </Button>
       </div>
 
+      {/* Error Message */}
+      {error && (
+        <div className='rounded-xl border border-destructive/50 bg-destructive/10 p-6'>
+          <h3 className='font-semibold text-destructive mb-2'>Unable to Load Courses</h3>
+          <p className='text-sm text-muted-foreground mb-4'>{error.message}</p>
+          {error.details && (
+            <details className='text-xs text-muted-foreground bg-background/50 p-3 rounded'>
+              <summary className='cursor-pointer font-medium'>Error Details</summary>
+              <pre className='mt-2 overflow-auto'>{error.details}</pre>
+            </details>
+          )}
+          <Button 
+            size="sm" 
+            onClick={GetCourseList}
+            className='mt-4'
+          >
+            Retry
+          </Button>
+        </div>
+      )}
+
       {/* Grid */}
       <div 
         ref={gridRef}
@@ -100,14 +133,14 @@ const CourseList = () => {
                 <CourseCardItem course={course} />
               </div>
             ))
-          ) : (
+          ) : !error ? (
             <div className='col-span-full flex flex-col items-center justify-center py-12'>
               <BookMarked className='w-12 h-12 text-muted-foreground mb-3' />
               <p className='text-muted-foreground text-center'>
                 No courses yet. Create one to get started!
               </p>
             </div>
-          )
+          ) : null
         ) : (
           [1,2,3,4,5,6].map((item,index)=>(
             <div 

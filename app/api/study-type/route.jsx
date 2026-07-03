@@ -99,6 +99,15 @@ export async function POST(req) {
 
   } catch (error) {
     console.error("Error in /api/study-type:", error);
+    
+    // Check if it's a database connection error
+    if (error.message?.includes("ECONNREFUSED") || error.message?.includes("getaddrinfo")) {
+      return NextResponse.json(
+        { error: "Database connection failed", details: "Unable to connect to database. Please ensure DATABASE_URL is set correctly." },
+        { status: 503 }
+      );
+    }
+    
     return NextResponse.json(
       { error: "Server error", details: error.message },
       { status: 500 }

@@ -60,6 +60,14 @@ export async function POST(req) {
     return NextResponse.json({ result: courses });
   } catch (error) {
     console.error("API Error (POST):", error);
+    
+    if (error.message?.includes("ECONNREFUSED") || error.message?.includes("getaddrinfo")) {
+      return NextResponse.json(
+        { error: "Database connection failed", details: "Unable to connect to database. Please ensure DATABASE_URL is set correctly." },
+        { status: 503 }
+      );
+    }
+    
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
@@ -86,6 +94,14 @@ export async function GET(req) {
     return NextResponse.json({ result: course[0] });
   } catch (error) {
     console.error("API Error (GET):", error);
+    
+    if (error.message?.includes("ECONNREFUSED") || error.message?.includes("getaddrinfo")) {
+      return NextResponse.json(
+        { error: "Database connection failed", details: "Unable to connect to database. Please ensure DATABASE_URL is set correctly." },
+        { status: 503 }
+      );
+    }
+    
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

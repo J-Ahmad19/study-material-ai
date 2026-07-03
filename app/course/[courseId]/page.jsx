@@ -6,12 +6,14 @@ import CourseIntroCard from "./CourseIntroCard";
 import StudyMaterialSection from "./StudyMaterialSection";
 import ChapterList from "./ChapterList";
 import gsap from "gsap";
-import { Loader } from "lucide-react";
+import { Loader, AlertCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 const Course = () => {
   const { courseId } = useParams();
   const [course, setCourse] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -22,19 +24,27 @@ const Course = () => {
 
   const fetchCourseDetail = async (id) => {
     try {
+      setLoading(true);
+      setError(null);
       const res = await fetch(`/api/courses?courseId=${id}`);
       const data = await res.json();
       if (data.success === false || data.error) {
+        setError(data.error || "Failed to load course details");
         console.error("Error:", data.error);
-      } else {
+      } else if (res.ok) {
         setCourse(data.result);
+      } else {
+        setError("Failed to load course. Please try again.");
       }
     } catch (error) {
+      setError(error.message || "An error occurred while loading the course");
       console.error("Fetch error:", error);
     } finally {
       setLoading(false);
     }
   };
+
+  const handleRetry = () => fetchCourseDetail(courseId);
 
   useEffect(() => {
     if (!loading && containerRef.current) {
@@ -56,6 +66,24 @@ const Course = () => {
         <div className="text-center">
           <Loader className="w-12 h-12 animate-spin text-primary mx-auto mb-4" />
           <p className="text-muted-foreground">Loading your course...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-secondary/5 p-4">
+        <div className="rounded-2xl border border-border bg-card p-8 max-w-md w-full text-center shadow-lg">
+          <AlertCircle className="w-16 h-16 text-destructive mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-foreground mb-2">Course Not Found</h2>
+          <p className="text-muted-foreground mb-6">{error}</p>
+          <Button 
+            onClick={handleRetry}
+            className="w-full rounded-xl bg-gradient-to-r from-primary to-secondary"
+          >
+            Try Again
+          </Button>
         </div>
       </div>
     );
